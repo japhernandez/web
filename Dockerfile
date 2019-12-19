@@ -1,12 +1,12 @@
-FROM node:10
+### Tarea 1 ###
+FROM node:10-alpine as builder
 
-WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
 
-COPY package.json .
+RUN npm ci && mkdir /ng-app && mv ./node_modules ./ng-app
 
-RUN npm install
+WORKDIR /ng-app
 
 COPY . .
 
-EXPOSE 8080
-CMD [ "node", "server.js" ]
+RUN npm run ng build -- --prod --output-path=dist
